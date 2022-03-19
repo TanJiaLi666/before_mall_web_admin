@@ -9,7 +9,7 @@
         <div style="text-align: center">
           <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
         </div>
-        <h2 class="login-title color-main">mall-admin-web</h2>
+        <h2 class="login-title color-main">商城可视化管理工具</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
@@ -69,6 +69,7 @@
           callback()
         }
       };
+
       return {
         loginForm: {
           username: '',
@@ -116,7 +117,7 @@
               this.loading = false;
               setCookie("username",this.loginForm.username,15);
               setCookie("password",this.loginForm.password,15);
-              this.$router.push({path: '/'})
+              this.$router.push({path: '/home'});
             }).catch(() => {
               this.loading = false
             })

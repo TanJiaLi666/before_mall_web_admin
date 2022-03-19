@@ -44,6 +44,7 @@
 </template>
 <script>
   import {getOrderSetting,updateOrderSetting} from '@/api/orderSetting';
+  import {getCookie} from '@/utils/support';
   const defaultOrderSetting = {
     id: null,
     flashOrderOvertime: 0,
@@ -107,9 +108,11 @@
         });
       },
       getDetail(){
-        getOrderSetting(1).then(response=>{
+        let uid = 0;
+        uid = getCookie("uid");
+        getOrderSetting(uid).then(response=>{
           this.orderSetting=response.data;
-        })
+        });
       }
     }
   }

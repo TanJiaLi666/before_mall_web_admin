@@ -1,5 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import {setCookie} from '@/utils/support';
 
 const user = {
   state: {
@@ -31,7 +32,8 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           const data = response.data
-          const tokenStr = data.tokenHead+" "+data.token 
+          setCookie("uid",data.id)
+          const tokenStr = data.tokenHead+" "+data.token
           setToken(tokenStr)
           commit('SET_TOKEN', tokenStr)
           resolve()
