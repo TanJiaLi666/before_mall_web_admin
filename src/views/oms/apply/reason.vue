@@ -131,6 +131,14 @@
           {
             label: "删除",
             value: 1
+          },
+          {
+            label: "全部启用",
+            value: 2
+          },
+          {
+            label: "全部禁用",
+            value: 3
           }
         ],
         dialogVisible:false,
@@ -196,12 +204,10 @@
         this.multipleSelection = val;
       },
       handleStatusChange(index,row){
-        let ids=[];
-        ids.push(row.id);
-        let param = new URLSearchParams();
-        param.append("status",row.status);
-        param.append("ids",ids);
-        updateStatus(param).then(response=>{
+        let data = new URLSearchParams();
+        data.append("status",row.status);
+        data.append("ids",row.id);
+        updateStatus(data).then(response=>{
           this.$message({
             message: '状态修改成功',
             type: 'success'
@@ -222,7 +228,48 @@
           for(let i=0;i<this.multipleSelection.length;i++){
             ids.push(this.multipleSelection[i].id);
           }
-          this.deleteReason(ids);
+          this.deleteReason(ids).then(response => {
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 1000
+            });
+          });
+          this.getList();
+        }
+        if(this.operateType===2){
+          let ids=[];
+          let data = new URLSearchParams();
+          for(let i=0;i<this.multipleSelection.length;i++){
+            ids.push(this.multipleSelection[i].id);
+          }
+          data.append("ids", ids);
+          data.append("status", 1);
+          updateStatus(data).then(response => {
+            this.getList();
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 1000
+            });
+          });
+        }
+        if(this.operateType===3){
+          let ids=[];
+          let data = new URLSearchParams();
+          for(let i=0;i<this.multipleSelection.length;i++){
+            ids.push(this.multipleSelection[i].id);
+          }
+          data.append("ids", ids);
+          data.append("status", 0);
+          updateStatus(data).then(response => {
+            this.getList();
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 1000
+            });
+          });
         }
       },
       handleSizeChange(val){

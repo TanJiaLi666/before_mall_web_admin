@@ -15,11 +15,11 @@ export function deleteReason(params) {
   })
 }
 
-export function updateStatus(params) {
+export function updateStatus(data) {
   return request({
     url:'/returnReason/update/status',
     method:'post',
-    params:params
+    params:data
   })
 }
 

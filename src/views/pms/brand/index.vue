@@ -150,6 +150,14 @@
           {
             label: "隐藏品牌",
             value: "hideBrand"
+          },
+          {
+            label: "显示制造商",
+            value: "show"
+          },
+          {
+            label: "隐藏制造商",
+            value: "hide"
           }
         ],
         operateType: null,
@@ -226,7 +234,6 @@
       },
       handleShowStatusChange(index, row) {
         let data = new URLSearchParams();
-        ;
         data.append("ids", row.id);
         data.append("showStatus", row.showStatus);
         updateShowStatus(data).then(response => {
@@ -267,33 +274,65 @@
           return;
         }
         let showStatus = 0;
-        if (this.operateType === 'showBrand') {
-          showStatus = 1;
-        } else if (this.operateType === 'hideBrand') {
-          showStatus = 0;
-        } else {
-          this.$message({
-            message: '请选择批量操作类型',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        let ids = [];
-        for (let i = 0; i < this.multipleSelection.length; i++) {
-          ids.push(this.multipleSelection[i].id);
-        }
-        let data = new URLSearchParams();
-        data.append("ids", ids);
-        data.append("showStatus", showStatus);
-        updateShowStatus(data).then(response => {
-          this.getList();
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
+        let show = 0;
+        if (this.operateType === 'showBrand' || this.operateType === 'hideBrand') {
+         if (this.operateType === 'showBrand') {
+           showStatus = 1;
+         } else if (this.operateType === 'hideBrand') {
+           showStatus = 0;
+         }else {
+           this.$message({
+             message: '请选择批量操作类型',
+             type: 'warning',
+             duration: 1000
+           });
+           return;
+         }
+         let ids = [];
+         for (let i = 0; i < this.multipleSelection.length; i++) {
+           ids.push(this.multipleSelection[i].id);
+         }
+         let data = new URLSearchParams();
+         data.append("ids", ids);
+         data.append("showStatus", showStatus);
+         updateShowStatus(data).then(response => {
+           this.getList();
+           this.$message({
+             message: '修改成功',
+             type: 'success',
+             duration: 1000
+           });
+         });
+       }
+        else if (this.operateType === 'show' || this.operateType === 'hide'){
+         if (this.operateType === 'show') {
+           show = 1;
+         } else if (this.operateType === 'hide') {
+           show = 0;
+         }else {
+           this.$message({
+             message: '请选择批量操作类型',
+             type: 'warning',
+             duration: 1000
+           });
+           return;
+         }
+         let ids = [];
+         for (let i = 0; i < this.multipleSelection.length; i++) {
+           ids.push(this.multipleSelection[i].id);
+         }
+         let data = new URLSearchParams();
+         data.append("ids", ids);
+         data.append("factoryStatus", show);
+         updateFactoryStatus(data).then(response => {
+           this.getList();
+           this.$message({
+             message: '修改成功',
+             type: 'success',
+             duration: 1000
+           });
+         });
+       }
       },
       addBrand() {
         this.$router.push({path: '/pms/addBrand'})

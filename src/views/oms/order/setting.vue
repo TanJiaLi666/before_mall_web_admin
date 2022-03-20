@@ -90,7 +90,7 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              updateOrderSetting(1,this.orderSetting).then(response=>{
+              updateOrderSetting(getCookie("uid"),this.orderSetting).then(response=>{
                 this.$message({
                   type: 'success',
                   message: '提交成功!',
