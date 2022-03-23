@@ -7,7 +7,7 @@
     </el-card>
     <div class="table-container">
       <el-table ref="flashSessionTable"
-                :data="list"
+                :data="dialogData.list"
                 style="width: 100%;"
                 v-loading="listLoading" border>
         <el-table-column label="编号" width="100" align="center">
@@ -45,6 +45,18 @@
           </template>
         </el-table-column>
       </el-table>
+    </div>
+    <div class="pagination-container">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="total, sizes,prev, pager, next,jumper"
+        :current-page.sync="listQuery.pageNum"
+        :page-size="listQuery.pageSize"
+        :page-sizes="[5,10,15,20]"
+        :total="dialogData.total">
+      </el-pagination>
     </div>
     <el-dialog
       title="添加时间段"
@@ -89,17 +101,35 @@
     name:null,
     startTime:null,
     endTime:null,
-    status:0
+    status:null
+  };
+  const defaultListQuery = {
+    pageNum: 1,
+    pageSize: 10,
+    flashPromotionId: null,
+    flashPromotionSessionId: null,
+    status: null
   };
   export default {
     name: 'flashPromotionSessionList',
     data() {
       return {
-        list: null,
+        listQuery: Object.assign({}, defaultListQuery),
         listLoading: false,
         dialogVisible:false,
         isEdit:false,
-        flashSession:Object.assign({},defaultFlashSession)
+        total: null,
+        flashSession:Object.assign({},defaultFlashSession),
+        dialogData:{
+          list: null,
+          total: null,
+          multipleSelection:[],
+          listQuery:{
+            keyword: null,
+            pageNum: 1,
+            pageSize: 5
+          }
+        }
       }
     },
     created() {
@@ -115,6 +145,15 @@
       }
     },
     methods: {
+      handleSizeChange(val) {
+        this.listQuery.pageNum = 1;
+        this.listQuery.pageSize = val;
+        this.getList();
+      },
+      handleCurrentChange(val) {
+        this.listQuery.pageNum = val;
+        this.getList();
+      },
       handleAdd() {
         this.dialogVisible = true;
         this.isEdit = false;
@@ -191,9 +230,11 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList({}).then(response => {
+        this.listQuery.status=3;
+        fetchList(this.listQuery).then(response => {
           this.listLoading = false;
-          this.list = response.data;
+          this.dialogData.list=response.data.list;
+          this.dialogData.total=response.data.total;
         });
       }
     }

@@ -46,3 +46,18 @@ export function updateSession(id, data) {
     data: data
   })
 }
+export function createSelectSession(data) {
+  return request({
+    url: '/flashSession/create/data',
+    method: 'post',
+    data: data
+  })
+}
+
+export function deleteFlashProductRelation(id,data) {
+  return request({
+    url: '/flashSession/deleteFlashProductRelation/'+ id,
+    method: 'post',
+    data: data
+  })
+}
