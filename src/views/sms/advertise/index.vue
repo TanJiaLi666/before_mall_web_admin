@@ -35,7 +35,7 @@
           <el-form-item label="到期时间：">
             <el-date-picker
               class="input-width"
-              v-model="listQuery.endTime"
+              v-model="listQuery.endsTime"
               value-format="yyyy-MM-dd"
               type="date"
               placeholder="请选择时间">
@@ -146,7 +146,7 @@
     pageSize: 5,
     name: null,
     type: null,
-    endTime:null
+    endsTime:null
   };
   const defaultTypeOptions = [
     {

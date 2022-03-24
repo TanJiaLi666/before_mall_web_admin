@@ -120,7 +120,7 @@
                 v-model="scope.row.newStatus">
               </el-switch>
             </p>
-            <p>推荐：
+            <p>人气：
               <el-switch
                 @change="handleRecommendStatusChange(scope.$index, scope.row)"
                 :active-value="1"

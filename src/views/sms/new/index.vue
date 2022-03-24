@@ -222,7 +222,8 @@
           listQuery:{
             keyword: null,
             pageNum: 1,
-            pageSize: 5
+            pageSize: 5,
+            newStatus: 1/*商品表中设置需要申请为新品推荐，在营销系统中给予关系，此处为查询新品状态*/
           }
         },
         sortDialogVisible:false,
