@@ -57,13 +57,13 @@
           policy: '',
           signature: '',
           key: '',
-          ossaccessKeyId: '',
+          OSSAccessKeyId: '',
           dir: '',
           host: '',
           // callback:'',
         },
         dialogVisible: false,
-        useOss:true, //使用oss->true;使用MinIO->false  
+        useOss:true, //使用oss->true;使用MinIO->false
         minioUploadUrl:'http://localhost:8080/minio/upload',
       };
     },
@@ -87,7 +87,7 @@
           policy().then(response => {
             _self.dataObj.policy = response.data.policy;
             _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
+            _self.dataObj.OSSAccessKeyId = response.data.accessId;
             _self.dataObj.key = response.data.dir + '/${filename}';
             _self.dataObj.dir = response.data.dir;
             _self.dataObj.host = response.data.host;
