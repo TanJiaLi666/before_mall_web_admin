@@ -51,7 +51,8 @@
     normalOrderOvertime: 0,
     confirmOvertime: 0,
     finishOvertime: 0,
-    commentOvertime: 0
+    commentOvertime: 0,
+    uid: 0
   };
   const checkTime = (rule, value, callback) => {
     if (!value) {
@@ -90,6 +91,7 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              this.orderSetting.uid = getCookie("uid");
               updateOrderSetting(getCookie("uid"),this.orderSetting).then(response=>{
                 this.$message({
                   type: 'success',

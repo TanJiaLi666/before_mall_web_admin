@@ -7,7 +7,7 @@
                ref="loginForm"
                label-position="left">
         <div style="text-align: center">
-          <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
+          <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #5ec496"></svg-icon>
         </div>
         <h2 class="login-title color-main">商城可视化管理工具</h2>
         <el-form-item prop="username">
@@ -37,7 +37,7 @@
           </el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px;text-align: center">
-          <el-button style="width:100%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
+          <el-button style="width:100%;background-color: #5ec496" type="primary" :loading="loading" @click.native.prevent="handleLogin">
             登录
           </el-button>
         </el-form-item>
@@ -149,7 +149,7 @@
     right: 0;
     width: 360px;
     margin: 140px auto;
-    border-top: 10px solid #409EFF;
+    border-top: 10px solid #5ec496;
   }
 
   .login-title {
@@ -157,7 +157,7 @@
   }
 
   .login-center-layout {
-    background: #409EFF;
+    background: #5ec496;
     width: auto;
     height: auto;
     max-width: 100%;
