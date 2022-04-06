@@ -5,7 +5,7 @@
     </el-button>
     <el-dialog append-to-body :visible.sync="dialogVisible">
       <el-upload class="editor-slide-upload"
-                 action="http://macro-oss.oss-cn-shenzhen.aliyuncs.com"
+                 :action="dataObj.host"
                  :data="dataObj"
                  :multiple="true"
                  :file-list="fileList"
@@ -93,11 +93,11 @@
           policy().then(response => {
             _self.dataObj.policy = response.data.policy;
             _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
+            _self.dataObj.ossaccessKeyId = response.data.accessId;
             _self.dataObj.key = response.data.dir + '/${filename}';
             _self.dataObj.dir = response.data.dir;
             _self.dataObj.host = response.data.host;
-            _self.listObj[fileName] = {hasSuccess: false, uid: file.uid, width: this.width, height: this.height};
+            _self.listObj[fileName] = {hasSuccess: true, uid: file.uid, width: this.width, height: this.height};
             resolve(true)
           }).catch(err => {
             console.log(err)

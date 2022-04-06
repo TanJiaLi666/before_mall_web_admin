@@ -4,6 +4,7 @@
       :action="useOss?dataObj.host:minioUploadUrl"
       :data="useOss?dataObj:null"
       list-type="picture-card"
+      :multiple="false" :show-file-list="showFileList"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
@@ -56,6 +57,13 @@
           fileList.push({url:this.value[i]});
         }
         return fileList;
+      },
+      showFileList: {
+        get: function () {
+          return this.value !== null && this.value !== ''&& this.value!==undefined;
+        },
+        set: function (newValue) {
+        }
       }
     },
     methods: {

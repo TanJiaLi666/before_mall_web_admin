@@ -430,7 +430,7 @@
             this.value.skuStockList=this.value.skuStockList.concat(this.value.skuStockList,tempSkuList);
           }
         });
-      }, 
+      },
       handleSyncProductSkuStock(){
         this.$confirm('将同步第一个sku的库存到所有sku,是否继续', '提示', {
           confirmButtonText: '确定',
