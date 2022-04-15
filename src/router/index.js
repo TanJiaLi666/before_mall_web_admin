@@ -269,6 +269,26 @@ export const asyncRouterMap = [
         meta: {title: '专题推荐', icon: 'sms-subject'}
       },
       {
+        path: 'category',
+        name: 'homeCategory',
+        component: () => import('@/views/sms/category/index'),
+        meta: {title: '分类推荐', icon: 'cate-list'}
+      },
+      {
+        path: 'addCategory',
+        name: 'addHomeCategory',
+        component: () => import('@/views/sms/category/add'),
+        meta: {title: '添加分类'},
+        hidden:true
+      },
+      {
+        path: 'updateCategory',
+        name: 'updateHomeCategory',
+        component: () => import('@/views/sms/category/update'),
+        meta: {title: '编辑分类'},
+        hidden:true
+      },
+      {
         path: 'advertise',
         name: 'homeAdvertise',
         component: () => import('@/views/sms/advertise/index'),
