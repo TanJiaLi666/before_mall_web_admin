@@ -59,6 +59,7 @@ const defaultTypeOptions = [
 ];
 const defaultHomeAdvertise = {
   categoryName: null,
+  categoryParentId: null,
   categoryId: null,
   type: 1,
   pic: null,
@@ -82,6 +83,7 @@ export default {
       selectProductCateValue: [],
       homeAdvertise: {
         categoryName: null,
+        categoryParentId:null,
         categoryId:null,
         type: 1,
         pic: null,
@@ -106,11 +108,13 @@ export default {
     }
   },
   created(){
+    this.getProductCateList();
     if (this.isEdit) {
       getHomeCategory(this.$route.query.id).then(response => {
         let res = response.data;
         this.homeAdvertise.categoryId = res.categoryId;
         this.homeAdvertise.categoryName = res.categoryName;
+        this.homeAdvertise.categoryParentId = res.categoryParentId;
         this.homeAdvertise.type = res.type;
         this.homeAdvertise.pic = res.pic;
         this.homeAdvertise.url = res.url;
@@ -120,14 +124,20 @@ export default {
     }else{
       this.homeAdvertise = Object.assign({},defaultHomeAdvertise);
     }
-    this.getProductCateList();
+  },
+  computed:{
+    //商品的编号
+    categoryIdMoth(){
+      return this.homeAdvertise.categoryId;
+    }
   },
   watch: {
-    homeAdvertise: function(newValue){
+    categoryIdMoth: function(newValue){
       if(!this.isEdit)return;
       if(this.hasEditCreated)return;
       if(newValue===undefined||newValue==null||newValue===0)return;
       if(this.homeAdvertise.categoryId!=null){
+        this.selectProductCateValue.push(this.homeAdvertise.categoryParentId)
         this.selectProductCateValue.push(this.homeAdvertise.categoryId);
       }
       this.hasEditCreated=true;

@@ -1,54 +1,33 @@
 <template>
   <div class="app-container">
-    <!-- <div class="address-layout">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <div class="out-border">
-            <div class="layout-title">后台项目</div>
-            <div class="color-main address-content">
-              <a href="https://github.com/macrozheng/mall">mall</a>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="out-border">
-            <div class="layout-title">前端项目</div>
-            <div class="color-main address-content">
-              <a href="https://github.com/macrozheng/mall-admin-web">商城可视化管理工具</a>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="out-border">
-            <div class="layout-title">程序开发666</div>
-            <div class="color-main address-content">
-              <a href="https://github.com/macrozheng/mall-learning">mall-learning</a>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div> -->
     <div class="total-layout">
       <el-row :gutter="20">
         <el-col :span="6">
           <div class="total-frame">
             <img :src="img_home_order" class="total-icon">
+            <div class="total-title">订单总数</div>
+            <div class="total-value">{{statistics.sum}}</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="total-frame">
+            <img :src="img_home_order" class="total-icon">
             <div class="total-title">今日订单总数</div>
-            <div class="total-value">200</div>
+            <div class="total-value">{{statistics.todaySum}}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="total-frame">
             <img :src="img_home_today_amount" class="total-icon">
             <div class="total-title">今日销售总额</div>
-            <div class="total-value">￥5000.00</div>
+            <div class="total-value">￥{{statistics.todaySaleSum}}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="total-frame">
             <img :src="img_home_yesterday_amount" class="total-icon">
             <div class="total-title">昨日销售总额</div>
-            <div class="total-value">￥5000.00</div>
+            <div class="total-value">￥{{statistics.yesterdaySaleSum}}</div>
           </div>
         </el-col>
         <el-col :span="6">
@@ -56,7 +35,7 @@
             <svg-icon icon-class="total-week" class="total-icon">
             </svg-icon>
             <div class="total-title">近7天销售总额</div>
-            <div class="total-value">￥50000.00</div>
+            <div class="total-value">￥{{statistics.recentSaleSum}}</div>
           </div>
         </el-col>
       </el-row>
@@ -68,39 +47,19 @@
           <el-col :span="8">
             <div class="un-handle-item">
               <span class="font-medium">待付款订单</span>
-              <span style="float: right" class="color-danger">(10)</span>
+              <span style="float: right" class="color-danger">({{statistics.a}})</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="un-handle-item">
               <span class="font-medium">已完成订单</span>
-              <span style="float: right" class="color-danger">(10)</span>
+              <span style="float: right" class="color-danger">({{statistics.d}})</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="un-handle-item">
-              <span class="font-medium">待确认收货订单</span>
-              <span style="float: right" class="color-danger">(10)</span>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <div class="un-handle-item">
-              <span class="font-medium">待发货订单</span>
-              <span style="float: right" class="color-danger">(10)</span>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="un-handle-item">
-              <span class="font-medium">新缺货登记</span>
-              <span style="float: right" class="color-danger">(10)</span>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="un-handle-item">
-              <span class="font-medium">待处理退款申请</span>
-              <span style="float: right" class="color-danger">(10)</span>
+              <span class="font-medium">已关闭订单</span>
+              <span style="float: right" class="color-danger">({{statistics.e}})</span>
             </div>
           </el-col>
         </el-row>
@@ -108,19 +67,40 @@
           <el-col :span="8">
             <div class="un-handle-item">
               <span class="font-medium">已发货订单</span>
-              <span style="float: right" class="color-danger">(10)</span>
+              <span style="float: right" class="color-danger">({{statistics.c}})</span>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="un-handle-item">
+              <span class="font-medium">待发货订单</span>
+              <span style="float: right" class="color-danger">({{statistics.b}})</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="un-handle-item">
               <span class="font-medium">待处理退货订单</span>
-              <span style="float: right" class="color-danger">(10)</span>
+              <span style="float: right" class="color-danger">({{ returnOrder.return_a }})</span>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <div class="un-handle-item">
+              <span class="font-medium">正在退货订单</span>
+              <span style="float: right" class="color-danger">({{ returnOrder.return_b }})</span>
+            </div>
+          </el-col>
+
+          <el-col :span="8">
+            <div class="un-handle-item">
+              <span class="font-medium">已完成退款申请</span>
+              <span style="float: right" class="color-danger">({{ returnOrder.return_c }})</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="un-handle-item">
-              <span class="font-medium">广告位即将到期</span>
-              <span style="float: right" class="color-danger">(10)</span>
+              <span class="font-medium">已拒绝退款申请</span>
+              <span style="float: right" class="color-danger">({{ returnOrder.return_d }})</span>
             </div>
           </el-col>
         </el-row>
@@ -133,10 +113,10 @@
             <div class="layout-title">商品总览</div>
             <div style="padding: 40px">
               <el-row>
-                <el-col :span="6" class="color-danger overview-item-value">100</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">400</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">50</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">500</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ productStatistics.downProductSum }}</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ productStatistics.upProductSum }}</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ productStatistics.stockLowSum }}</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ productStatistics.productSum }}</el-col>
               </el-row>
               <el-row class="font-medium">
                 <el-col :span="6" class="overview-item-title">已下架</el-col>
@@ -152,10 +132,10 @@
             <div class="layout-title">用户总览</div>
             <div style="padding: 40px">
               <el-row>
-                <el-col :span="6" class="color-danger overview-item-value">100</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">200</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">1000</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">5000</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ userStatistics.todayMemberSum }}</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ userStatistics.yesterdayMemberSum }}</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ userStatistics.monthMemberSum }}</el-col>
+                <el-col :span="6" class="color-danger overview-item-value">{{ userStatistics.memberSum }}</el-col>
               </el-row>
               <el-row class="font-medium">
                 <el-col :span="6" class="overview-item-title">今日新增</el-col>
@@ -175,7 +155,7 @@
           <div style="padding: 20px">
             <div>
               <div style="color: #909399;font-size: 14px">本月订单总数</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">10000</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{statistics.sum}}</div>
               <div>
                 <span class="color-success" style="font-size: 14px">+10%</span>
                 <span style="color: #C0C4CC;font-size: 14px">同比上月</span>
@@ -242,6 +222,7 @@
   import img_home_order from '@/assets/images/home_order.png';
   import img_home_today_amount from '@/assets/images/home_today_amount.png';
   import img_home_yesterday_amount from '@/assets/images/home_yesterday_amount.png';
+  import {orderStatistics,returnOrder,ProductStatistics,UserStatistics} from '@/api/home'
   const DATA_FROM_BACKEND = {
     columns: ['date', 'orderCount','orderAmount'],
     rows: [
@@ -261,6 +242,16 @@
       {date: '2018-11-14', orderCount: 10, orderAmount: 1293},
       {date: '2018-11-15', orderCount: 40, orderAmount: 4293}
     ]
+  };
+  const defaultListQuery = {
+    keyword: null,
+    pageNum: 1,
+    pageSize: 5,
+    publishStatus: null,
+    verifyStatus: null,
+    productSn: null,
+    productCategoryId: null,
+    brandId: null
   };
   export default {
     name: 'home',
@@ -291,6 +282,7 @@
             }
           }]
         },
+        listQuery: Object.assign({}, defaultListQuery),
         orderCountDate: '',
         chartSettings: {
           xAxisType: 'time',
@@ -301,6 +293,38 @@
           columns: [],
           rows: []
         },
+        statistics: {
+          orderAllList: null,
+          sum: 100,
+          todaySum: 100,
+          todaySaleSum: 1000,
+          yesterdaySaleSum: 100,
+          recentSaleSum: 100,
+          a:0,
+          b:0,
+          c:0,
+          d:0,
+          e:0,
+          f:0,
+        },
+        returnOrder: {
+          return_a:0,
+          return_b:0,
+          return_c:0,
+          return_d:0
+        },
+        productStatistics: {
+          productSum: 0,
+          stockLowSum: 0,
+          upProductSum: 0,
+          downProductSum: 0
+        },
+        userStatistics: {
+          memberSum:0,
+          todayMemberSum:0,
+          yesterdayMemberSum:0,
+          monthMemberSum:0
+        },
         loading: false,
         dataEmpty: false,
         img_home_order,
@@ -309,10 +333,54 @@
       }
     },
     created(){
+      this.getOrder();
+      this.getReturnOrder();
+      this.getProductStatistics();
+      this.getUserStatistics();
       this.initOrderCountDate();
       this.getData();
     },
     methods:{
+      getUserStatistics() {
+        UserStatistics().then(response => {
+          this.userStatistics.todayMemberSum = response.data.todayMemberSum;
+          this.userStatistics.yesterdayMemberSum = response.data.yesterdayMemberSum;
+          this.userStatistics.memberSum = response.data.memberSum;
+          this.userStatistics.monthMemberSum = response.data.monthMemberSum;
+        });
+      },
+      getProductStatistics() {
+        ProductStatistics().then(response => {
+          this.productStatistics.productSum = response.data.productSum;
+          this.productStatistics.downProductSum = response.data.downProductSum;
+          this.productStatistics.upProductSum = response.data.upProductSum;
+          this.productStatistics.stockLowSum = response.data.stockLowSum;
+        });
+      },
+      getReturnOrder() {
+        returnOrder().then(response => {
+          this.returnOrder.return_a = response.data.return_a;
+          this.returnOrder.return_b = response.data.return_b;
+          this.returnOrder.return_c = response.data.return_c;
+          this.returnOrder.return_d = response.data.return_d;
+        });
+      },
+      getOrder() {
+        orderStatistics().then(response => {
+          this.statistics.orderAllList = response.data.list;
+          this.statistics.sum = response.data.sum;
+          this.statistics.recentSaleSum = response.data.recentSaleSum;
+          this.statistics.yesterdaySaleSum = response.data.yesterdaySaleSum;
+          this.statistics.todaySaleSum = response.data.todaySaleSum;
+          this.statistics.todaySum = response.data.todaySum;
+          this.statistics.a = response.data.a;
+          this.statistics.b = response.data.b;
+          this.statistics.c = response.data.c;
+          this.statistics.d = response.data.d;
+          this.statistics.e = response.data.e;
+          this.statistics.f = response.data.f;
+        });
+      },
       handleDateChange(){
         this.getData();
       },
