@@ -184,7 +184,7 @@
     filters:{
       formatTime(time) {
         if(time==null||time===''){
-          return 'N/A';
+          return '暂未处理';
         }
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm:ss')

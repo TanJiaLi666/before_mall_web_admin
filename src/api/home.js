@@ -25,3 +25,10 @@ export function UserStatistics() {
     method: 'get'
   })
 }
+export function mapStatistics(params) {
+  return request({
+    url:'/home/order/map_statistics',
+    method:'get',
+    params:params
+  })
+}

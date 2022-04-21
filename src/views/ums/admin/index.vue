@@ -108,6 +108,13 @@
         <el-form-item label="姓名：">
           <el-input v-model="admin.nickName" style="width: 250px"></el-input>
         </el-form-item>
+        <el-form-item label="用户头像：">
+          <single-upload v-model="admin.icon"
+                         style="width: 300px;
+                         display: inline-block;
+                         margin-left: 10px">
+          </single-upload>
+        </el-form-item>
         <el-form-item label="邮箱：">
           <el-input v-model="admin.email" style="width: 250px"></el-input>
         </el-form-item>
@@ -155,6 +162,7 @@
   import {fetchList,createAdmin,updateAdmin,updateStatus,deleteAdmin,getRoleByAdmin,allocRole} from '@/api/login';
   import {fetchAllRoleList} from '@/api/role';
   import {formatDate} from '@/utils/date';
+  import SingleUpload from "../../../components/Upload/singleUpload";
 
   const defaultListQuery = {
     pageNum: 1,
@@ -167,11 +175,13 @@
     password: null,
     nickName: null,
     email: null,
+    icon:'',
     note: null,
     status: 1
   };
   export default {
     name: 'adminList',
+    components: {SingleUpload},
     data() {
       return {
         listQuery: Object.assign({}, defaultListQuery),
@@ -194,7 +204,7 @@
     filters: {
       formatDateTime(time) {
         if (time == null || time === '') {
-          return 'N/A';
+          return '从未登录';
         }
         let date = new Date(time);
         return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
@@ -223,23 +233,11 @@
         this.admin = Object.assign({},defaultAdmin);
       },
       handleStatusChange(index, row) {
-        this.$confirm('是否要修改该状态?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          updateStatus(row.id, {status: row.status}).then(response => {
-            this.$message({
-              type: 'success',
-              message: '修改成功!'
-            });
-          });
-        }).catch(() => {
+        updateStatus(row.id, {status: row.status}).then(response => {
           this.$message({
-            type: 'info',
-            message: '取消修改'
+            type: 'success',
+            message: '修改成功!'
           });
-          this.getList();
         });
       },
       handleDelete(index, row) {

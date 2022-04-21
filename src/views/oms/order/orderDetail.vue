@@ -15,21 +15,21 @@
         <span class="color-danger">当前订单状态：{{order.status | formatStatus}}</span>
         <div class="operate-button-container" v-show="order.status===0">
           <el-button size="mini" @click="showUpdateReceiverDialog">修改收货人信息</el-button>
-          <el-button size="mini">修改商品信息</el-button>
+<!--          <el-button size="mini">修改商品信息</el-button>-->
           <el-button size="mini" @click="showUpdateMoneyDialog">修改费用信息</el-button>
-          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>
+<!--          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
           <el-button size="mini" @click="showCloseOrderDialog">关闭订单</el-button>
           <el-button size="mini" @click="showMarkOrderDialog">备注订单</el-button>
         </div>
         <div class="operate-button-container" v-show="order.status===1">
           <el-button size="mini" @click="showUpdateReceiverDialog">修改收货人信息</el-button>
-          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>
-          <el-button size="mini">取消订单</el-button>
+<!--          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
+          <el-button size="mini" @click="handleCancelOrderDialog">取消订单</el-button>
           <el-button size="mini" @click="showMarkOrderDialog">备注订单</el-button>
         </div>
         <div class="operate-button-container" v-show="order.status===2||order.status===3">
           <el-button size="mini" @click="showLogisticsDialog">订单跟踪</el-button>
-          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>
+<!--          <el-button size="mini" @click="showMessageDialog">发送站内信</el-button>-->
           <el-button size="mini" @click="showMarkOrderDialog">备注订单</el-button>
         </div>
         <div class="operate-button-container" v-show="order.status===4">
@@ -347,12 +347,12 @@
   </div>
 </template>
 <script>
-  import {getOrderDetail,updateReceiverInfo,updateMoneyInfo,closeOrder,updateOrderNote,deleteOrder} from '@/api/order';
+  import {getOrderDetail,updateReceiverInfo,updateMoneyInfo,closeOrder,cancelOrder,updateOrderNote,deleteOrder} from '@/api/order';
   import LogisticsDialog from '@/views/oms/order/components/logisticsDialog';
   import {formatDate} from '@/utils/date';
   import VDistpicker from 'v-distpicker';
   const defaultReceiverInfo = {
-    orderId:null,
+    id:null,
     receiverName:null,
     receiverPhone:null,
     receiverPostCode:null,
@@ -372,7 +372,7 @@
         receiverDialogVisible:false,
         receiverInfo:Object.assign({},defaultReceiverInfo),
         moneyDialogVisible:false,
-        moneyInfo:{orderId:null, freightAmount:0, discountAmount:0,status:null},
+        moneyInfo:{id:null, freightAmount:0, discountAmount:0,status:null},
         messageDialogVisible:false,
         message: {title:null, content:null},
         closeDialogVisible:false,
@@ -516,7 +516,7 @@
       showUpdateReceiverDialog(){
         this.receiverDialogVisible=true;
         this.receiverInfo={
-          orderId:this.order.id,
+          id:this.order.id,
           receiverName:this.order.receiverName,
           receiverPhone:this.order.receiverPhone,
           receiverPostCode:this.order.receiverPostCode,
@@ -547,7 +547,7 @@
       },
       showUpdateMoneyDialog(){
         this.moneyDialogVisible=true;
-        this.moneyInfo.orderId=this.order.id;
+        this.moneyInfo.id=this.order.id;
         this.moneyInfo.freightAmount=this.order.freightAmount;
         this.moneyInfo.discountAmount=this.order.discountAmount;
         this.moneyInfo.status=this.order.status;
@@ -592,6 +592,27 @@
         this.closeDialogVisible=true;
         this.closeInfo.note=null;
         this.closeInfo.id=this.id;
+      },
+      handleCancelOrderDialog(){
+        this.$confirm('是否要取消订单?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = new URLSearchParams();
+          params.append("ids",[this.id]);
+          params.append("note", "关闭订单");
+          cancelOrder(params).then(response=>{
+            this.closeDialogVisible=false;
+            this.$message({
+              type: 'success',
+              message: '订单关闭成功!'
+            });
+            getOrderDetail(this.id).then(response => {
+              this.order = response.data;
+            });
+          });
+        });
       },
       handleCloseOrder(){
         this.$confirm('是否要关闭?', '提示', {

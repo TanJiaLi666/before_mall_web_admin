@@ -91,8 +91,7 @@
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              this.orderSetting.uid = getCookie("uid");
-              updateOrderSetting(getCookie("uid"),this.orderSetting).then(response=>{
+              updateOrderSetting(this.orderSetting).then(response=>{
                 this.$message({
                   type: 'success',
                   message: '提交成功!',
@@ -111,8 +110,8 @@
       },
       getDetail(){
         let uid = 0;
-        uid = getCookie("uid");
-        getOrderSetting(uid).then(response=>{
+        // uid = getCookie("uid");
+        getOrderSetting().then(response=>{
           this.orderSetting=response.data;
         });
       }

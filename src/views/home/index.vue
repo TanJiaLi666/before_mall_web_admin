@@ -155,33 +155,33 @@
           <div style="padding: 20px">
             <div>
               <div style="color: #909399;font-size: 14px">本月订单总数</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{statistics.sum}}</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{statistics.monthOrderSum}}</div>
               <div>
-                <span class="color-success" style="font-size: 14px">+10%</span>
-                <span style="color: #C0C4CC;font-size: 14px">同比上月</span>
+                <span :class="[this.statistics.monthOrderSum<this.statistics.lastMonthOrderSum?'color-danger':'color-success']" style="font-size: 14px">{{Math.round(((statistics.monthOrderSum-statistics.lastMonthOrderSum)/(statistics.monthOrderSum+statistics.lastMonthOrderSum))*100) }}%</span>
+                <span style="color: #C0C4CC;font-size: 14px">较上月</span>
               </div>
             </div>
             <div style="margin-top: 20px;">
               <div style="color: #909399;font-size: 14px">本周订单总数</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">1000</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{ statistics.weekOrderSum }}</div>
               <div>
-                <span class="color-danger" style="font-size: 14px">-10%</span>
+                <span :class="[this.statistics.weekOrderSum<this.statistics.lastWeekOrderSum?'color-danger':'color-success']" style="font-size: 14px">{{ Math.round(((statistics.weekOrderSum-statistics.lastWeekOrderSum)/(statistics.weekOrderSum+statistics.lastWeekOrderSum))*100) }}%</span>
                 <span style="color: #C0C4CC;font-size: 14px">同比上周</span>
               </div>
             </div>
             <div style="margin-top: 20px;">
               <div style="color: #909399;font-size: 14px">本月销售总额</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">100000</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{ statistics.monthOrderSale }}</div>
               <div>
-                <span class="color-success" style="font-size: 14px">+10%</span>
+                <span :class="[this.statistics.monthOrderSale<this.statistics.lastMonthOrderSale?'color-danger':'color-success']" style="font-size: 14px">{{ Math.round(((statistics.monthOrderSale-statistics.lastMonthOrderSale)/(statistics.monthOrderSale+statistics.lastMonthOrderSale))*100) }}%</span>
                 <span style="color: #C0C4CC;font-size: 14px">同比上月</span>
               </div>
             </div>
             <div style="margin-top: 20px;">
               <div style="color: #909399;font-size: 14px">本周销售总额</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">50000</div>
+              <div style="color: #606266;font-size: 24px;padding: 10px 0">{{ statistics.weekOrderSale }}</div>
               <div>
-                <span class="color-danger" style="font-size: 14px">-10%</span>
+                <span :class="[this.statistics.weekOrderSale<this.statistics.lastWeekOrderSale?'color-danger':'color-success']" style="font-size: 14px">{{ Math.round(((statistics.weekOrderSale-statistics.lastWeekOrderSale)/(statistics.weekOrderSale+statistics.lastWeekOrderSale))*100) }}%</span>
                 <span style="color: #C0C4CC;font-size: 14px">同比上周</span>
               </div>
             </div>
@@ -222,36 +222,11 @@
   import img_home_order from '@/assets/images/home_order.png';
   import img_home_today_amount from '@/assets/images/home_today_amount.png';
   import img_home_yesterday_amount from '@/assets/images/home_yesterday_amount.png';
-  import {orderStatistics,returnOrder,ProductStatistics,UserStatistics} from '@/api/home'
-  const DATA_FROM_BACKEND = {
-    columns: ['date', 'orderCount','orderAmount'],
-    rows: [
-      {date: '2018-11-01', orderCount: 10, orderAmount: 1093},
-      {date: '2018-11-02', orderCount: 20, orderAmount: 2230},
-      {date: '2018-11-03', orderCount: 33, orderAmount: 3623},
-      {date: '2018-11-04', orderCount: 50, orderAmount: 6423},
-      {date: '2018-11-05', orderCount: 80, orderAmount: 8492},
-      {date: '2018-11-06', orderCount: 60, orderAmount: 6293},
-      {date: '2018-11-07', orderCount: 20, orderAmount: 2293},
-      {date: '2018-11-08', orderCount: 60, orderAmount: 6293},
-      {date: '2018-11-09', orderCount: 50, orderAmount: 5293},
-      {date: '2018-11-10', orderCount: 30, orderAmount: 3293},
-      {date: '2018-11-11', orderCount: 20, orderAmount: 2293},
-      {date: '2018-11-12', orderCount: 80, orderAmount: 8293},
-      {date: '2018-11-13', orderCount: 100, orderAmount: 10293},
-      {date: '2018-11-14', orderCount: 10, orderAmount: 1293},
-      {date: '2018-11-15', orderCount: 40, orderAmount: 4293}
-    ]
-  };
+  import {orderStatistics,returnOrder,ProductStatistics,UserStatistics,mapStatistics} from '@/api/home'
+  import {parseTime} from "../../utils";
   const defaultListQuery = {
-    keyword: null,
-    pageNum: 1,
-    pageSize: 5,
-    publishStatus: null,
-    verifyStatus: null,
-    productSn: null,
-    productCategoryId: null,
-    brandId: null
+    start: 0,
+    end: 0
   };
   export default {
     name: 'home',
@@ -263,10 +238,7 @@
             onClick(picker) {
               const end = new Date();
               let start = new Date();
-              start.setFullYear(2018);
-              start.setMonth(10);
-              start.setDate(1);
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
               picker.$emit('pick', [start, end]);
             }
           }, {
@@ -274,10 +246,7 @@
             onClick(picker) {
               const end = new Date();
               let start = new Date();
-              start.setFullYear(2018);
-              start.setMonth(10);
-              start.setDate(1);
-              end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
+              start.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
               picker.$emit('pick', [start, end]);
             }
           }]
@@ -294,7 +263,10 @@
           rows: []
         },
         statistics: {
-          orderAllList: null,
+          orderAllList: [
+            /*{date: '2022-04-01', orderCount: 10, orderAmount: 1093},
+           */
+          ],
           sum: 100,
           todaySum: 100,
           todaySaleSum: 1000,
@@ -306,6 +278,15 @@
           d:0,
           e:0,
           f:0,
+          weekOrderSum:0,
+          lastWeekOrderSum:0,
+          weekOrderSale:0,
+          lastWeekOrderSale:0,
+          //月信息
+          monthOrderSum:0,
+          lastMonthOrderSum:0,
+          monthOrderSale:0,
+          lastMonthOrderSale:0
         },
         returnOrder: {
           return_a:0,
@@ -367,7 +348,6 @@
       },
       getOrder() {
         orderStatistics().then(response => {
-          this.statistics.orderAllList = response.data.list;
           this.statistics.sum = response.data.sum;
           this.statistics.recentSaleSum = response.data.recentSaleSum;
           this.statistics.yesterdaySaleSum = response.data.yesterdaySaleSum;
@@ -379,19 +359,19 @@
           this.statistics.d = response.data.d;
           this.statistics.e = response.data.e;
           this.statistics.f = response.data.f;
+          this.statistics.weekOrderSum = response.data.weekOrderSum;
+          this.statistics.weekOrderSale = response.data.weekOrderSale;
+          this.statistics.lastWeekOrderSum = response.data.lastWeekOrderSum;
+          this.statistics.lastWeekOrderSale = response.data.lastWeekOrderSale;
+          this.statistics.monthOrderSum = response.data.monthOrderSum;
+          this.statistics.monthOrderSale = response.data.monthOrderSale;
+          this.statistics.lastMonthOrderSum = response.data.lastMonthOrderSum;
+          this.statistics.lastMonthOrderSale = response.data.lastMonthOrderSale;
+          // this.statistics.orderAllList = response.data.orderList;
         });
       },
       handleDateChange(){
         this.getData();
-      },
-      initOrderCountDate(){
-        let start = new Date();
-        start.setFullYear(2018);
-        start.setMonth(10);
-        start.setDate(1);
-        const end = new Date();
-        end.setTime(start.getTime() + 1000 * 60 * 60 * 24 * 7);
-        this.orderCountDate=[start,end];
       },
       getData(){
         setTimeout(() => {
@@ -399,11 +379,18 @@
             columns: ['date', 'orderCount','orderAmount'],
             rows: []
           };
-          for(let i=0;i<DATA_FROM_BACKEND.rows.length;i++){
-            let item=DATA_FROM_BACKEND.rows[i];
+          /*this.statistics.orderAllList = [];*/
+          this.chartData.rows = [];
+          let start=this.orderCountDate[0];
+          let end=this.orderCountDate[1];
+          this.listQuery.start = parseTime(start, "{y}-{m}-{d}");
+          this.listQuery.end = parseTime(end, "{y}-{m}-{d}");
+          mapStatistics(this.listQuery).then(response => {
+            this.statistics.orderAllList = response.data.orderList;
+          });
+          for(let i=0;i<this.statistics.orderAllList.length;i++){
+            let item=this.statistics.orderAllList[i];
             let currDate=str2Date(item.date);
-            let start=this.orderCountDate[0];
-            let end=this.orderCountDate[1];
             if(currDate.getTime()>=start.getTime()&&currDate.getTime()<=end.getTime()){
               this.chartData.rows.push(item);
             }
@@ -411,6 +398,12 @@
           this.dataEmpty = false;
           this.loading = false
         }, 1000)
+      },
+      initOrderCountDate(){
+        let end = new Date();
+        const start = new Date();
+        start.setTime(start.getTime() - 1000 * 60 * 60 * 24 * 20);
+        this.orderCountDate=[start,end];
       }
     }
   }

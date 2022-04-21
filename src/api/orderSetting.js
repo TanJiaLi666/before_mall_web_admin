@@ -1,14 +1,14 @@
 import request from '@/utils/request'
-export function getOrderSetting(id) {
+export function getOrderSetting() {
   return request({
-    url:'/orderSetting/'+id,
+    url:'/orderSetting/',
     method:'get',
   })
 }
 
-export function updateOrderSetting(id,data) {
+export function updateOrderSetting(data) {
   return request({
-    url:'/orderSetting/update/'+id,
+    url:'/orderSetting/update/',
     method:'post',
     data:data
   })

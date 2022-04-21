@@ -15,6 +15,13 @@ export function closeOrder(params) {
   })
 }
 
+export function cancelOrder(params) {
+  return request({
+    url:'/order/update/cancel',
+    method:'post',
+    params:params
+  })
+}
 export function deleteOrder(params) {
   return request({
     url:'/order/delete',
