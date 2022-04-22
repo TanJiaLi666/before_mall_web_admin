@@ -157,7 +157,7 @@
             <p>
               <el-button
                 size="mini"
-                @click="handleShowProduct(scope.$index, scope.row)">查看
+                @click="handleUpdateProduct(scope.$index, scope.row)">查看
               </el-button>
               <el-button
                 size="mini"
@@ -165,10 +165,10 @@
               </el-button>
             </p>
             <p>
-              <el-button
+<!--              <el-button
                 size="mini"
                 @click="handleShowLog(scope.$index, scope.row)">日志
-              </el-button>
+              </el-button>-->
               <el-button
                 size="mini"
                 type="danger"
