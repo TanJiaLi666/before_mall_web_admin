@@ -269,6 +269,19 @@ export const asyncRouterMap = [
         meta: {title: '专题推荐', icon: 'sms-subject'}
       },
       {
+        path: 'comments',
+        name: 'shopComments',
+        component: () => import('@/views/sms/comment/index'),
+        meta: {title: '评论管理', icon: 'product-list'}
+      },
+      {
+        path: 'replyComment',
+        name: 'shopReplyComment',
+        component: () => import('@/views/sms/comment/replyComment'),
+        meta: {title: '回复评论管理'},
+        hidden: true
+      },
+      {
         path: 'category',
         name: 'homeCategory',
         component: () => import('@/views/sms/category/index'),
