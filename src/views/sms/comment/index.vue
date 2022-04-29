@@ -102,7 +102,7 @@
         <el-table-column label="评论数" width="100" align="center">
           <template slot-scope="scope">{{scope.row.commentSum}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="400" align="center">
+        <el-table-column label="操作" width="300" align="center">
           <template slot-scope="scope">
             <p>
               <el-button
@@ -112,10 +112,6 @@
               <el-button
                 size="mini"
                 @click="handleSendCommentReply(scope.$index, scope.row)">回复评论
-              </el-button>
-              <el-button
-                size="mini"
-                >评论违规
               </el-button>
             </p>
           </template>
@@ -213,6 +209,8 @@ export default {
       this.dialogFormVisible = false
       sendComment(this.comment).then(res => {
         this.$message("发布成功！！！");
+        this.comment.content = '';
+        this.getList();
       });
     },
     handleSelect(item) {

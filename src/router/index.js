@@ -278,6 +278,13 @@ export const asyncRouterMap = [
         path: 'replyComment',
         name: 'shopReplyComment',
         component: () => import('@/views/sms/comment/replyComment'),
+        meta: {title: '商品评论管理'},
+        hidden: true
+      },
+      {
+        path: 'replyCommentInfo',
+        name: 'shopReplyCommentInfo',
+        component: () => import('@/views/sms/comment/replyCommentInfo'),
         meta: {title: '回复评论管理'},
         hidden: true
       },

@@ -1,8 +1,8 @@
 <template> 
   <div class="app-container">
-<!--    搜索-->
+    <!--    搜索-->
     <el-card class="filter-container" shadow="never">
-<!--      搜索-->
+      <!--      搜索-->
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
@@ -20,14 +20,14 @@
           重置
         </el-button>
       </div>
-<!--      筛选-->
+      <!--      筛选-->
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="用户名称：">
             <el-input v-model="listQuery.memberNickName" class="input-width" placeholder="用户昵称"></el-input>
           </el-form-item>
-          <el-form-item label="违规状态：">
-            <el-select v-model="listQuery.showStatus" placeholder="全部" clearable class="input-width">
+          <el-form-item label="用户身份：">
+            <el-select v-model="listQuery.type" placeholder="全部" clearable class="input-width">
               <el-option v-for="item in typeOptions"
                          :key="item.value"
                          :label="item.label"
@@ -38,11 +38,11 @@
         </el-form>
       </div>
     </el-card>
-<!--    添加-->
+    <!--    添加-->
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>回复评论列表</span>
-      <el-button size="mini" class="btn-add" @click="handleAdd()">添加评论</el-button>
+      <el-button size="mini" class="btn-add" @click="handleAdd()">回复</el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="homeAdvertiseTable"
@@ -57,48 +57,17 @@
         <el-table-column label="用户" width="110" align="center">
           <template slot-scope="scope">{{scope.row.memberNickName}}</template>
         </el-table-column>
-        <el-table-column label="评论内容" width="500" align="center">
+        <el-table-column label="评论内容"  align="center">
           <template slot-scope="scope">{{scope.row.content}}</template>
         </el-table-column>
-        <el-table-column label="违规状态" width="90"  align="center">
-          <template slot-scope="scope">{{scope.row.showStatus | formatType}}</template>
+        <el-table-column label="评论时间" width="250"  align="center">
+          <template slot-scope="scope">{{scope.row.createTime | formatTime}}</template>
         </el-table-column>
-        <el-table-column label="置顶状态" width="90" align="center">
-          <template slot-scope="scope">{{scope.row.sort | formatType2}}</template>
+        <el-table-column label="回复类别" width="90"  align="center">
+          <template slot-scope="scope">{{scope.row.type | formatType}}</template>
         </el-table-column>
-        <el-table-column label="是否违规删评"  align="center">
-          <template slot-scope="scope">
-            <el-switch
-              @change="handleUpdateStatus(scope.$index, scope.row)"
-              style="display: block"
-              v-model="scope.row.showStatus"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              :active-value="0"
-              :inactive-value="1"
-              active-text="无违规记录"
-              inactive-text="违规评论禁用">
-            </el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="置顶程度"  align="center">
-          <template slot-scope="scope">
-            <div class="block">
-              <el-slider
-                @change="handleSlider(scope.$index, scope.row)"
-                v-model="scope.row.sort"
-                show-input>
-              </el-slider>
-            </div>
-          </template>
-        </el-table-column>
-
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
-            <el-button size="mini"
-                       type="text"
-                       @click="showCommentReply(scope.$index, scope.row)">查看回复
-            </el-button>
             <el-button size="mini"
                        type="text"
                        @click="handleDelete(scope.$index, scope.row)">删除
@@ -107,7 +76,7 @@
         </el-table-column>
       </el-table>
     </div>
-<!--    批量处理-->
+    <!--    批量处理-->
     <div class="batch-operate-container">
       <el-select
         size="small"
@@ -128,7 +97,7 @@
         确定
       </el-button>
     </div>
-<!--    分页-->
+    <!--    分页-->
     <div class="pagination-container">
       <el-pagination
         background
@@ -141,13 +110,13 @@
         :total="total">
       </el-pagination>
     </div>
-<!--    发布商品信息-->
+    <!--    回复信息-->
     <el-dialog :visible.sync="dialogFormVisible" :title="dialogTitle">
       <el-autocomplete
         class="inline-input"
         v-model="comment.content"
         :fetch-suggestions="querySearch"
-        placeholder="请输入需要发布的内容"
+        placeholder="请输入需要回复的内容"
         @select="handleSelect"
       ></el-autocomplete>
       <div slot="footer" class="dialog-footer">
@@ -158,31 +127,32 @@
   </div>
 </template>
 <script>
-import {fetchList,sendComment,updateStatus,deleteReply,updateSort,getCommentReply} from '@/api/comment'
+import {deleteReplyIn,sendCommentReply,updateStatus,updateSort,getCommentReply} from '@/api/comment'
+import {formatDate} from "../../../utils/date";
 const defaultListQuery = {
   pageNum: 1,
   pageSize: 5,
   memberNickName: null,
-  showStatus: null
+  type: null
 };
 const defaultTypeOptions = [
   {
-    label: '违规',
+    label: '普通用户',
     value: 1
   },
   {
-    label: '非违规',
+    label: '管理员',
     value: 0
   }
 ];
 const commentParam = {
-  productId: null,
+  commentId: null,
   productName: null,
   productAttribute: null,
   content: null
 };
 export default {
-  name: 'homeAdvertiseList',
+  name: 'replyCommentInfo',
   data() {
     return {
       selectCommentVisible: false,
@@ -199,15 +169,7 @@ export default {
       multipleSelection: [],
       operates: [
         {
-          label: "标记违规",
-          value: 1
-        },
-        {
-          label: "取消标记违规",
-          value: 2
-        },
-        {
-          label: "删除商品评论",
+          label: "删除回复评论",
           value: 0
         }
       ],
@@ -222,32 +184,27 @@ export default {
   filters:{
     formatType(type){
       if(type===1){
-        return '违规';
+        return '普通用户';
       }else{
-        return '非违规';
+        return '管理员';
       }
     },
-    formatType2(type){
-      if(type===100){
-        return '管理员评论';
-      }else if (type >= 10){
-        return '置顶';
-      } else{
-        return '非置顶';
+    formatTime(time){
+      if(time==null||time===''){
+        return 'N/A';
       }
-    }
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+    },
   },
   methods: {
-    showCommentReply(index, row){
-      this.$router.push({path:'/sms/replyCommentInfo',query:{id:row.id}});
-    },
     handleSlider(index,row){
       let params = new URLSearchParams();
       params.append("id",row.id);
       params.append("sort",row.sort);
       updateSort(params).then(result => {
         this.$message({
-          message: '成功！',
+          message: '删除成功！',
           type: 'success',
           duration: 1000
         });
@@ -256,7 +213,7 @@ export default {
     },
     sendComment(){
       this.dialogFormVisible = false
-      sendComment(this.comment).then(res => {
+      sendCommentReply(this.comment).then(res => {
         this.$message("发布成功！！！");
         this.comment.content = '';
         this.getList();
@@ -320,7 +277,7 @@ export default {
       }).then(() => {
         let params = new URLSearchParams();
         params.append("ids",ids);
-        deleteReply(params).then(response=>{
+        deleteReplyIn(params).then(response=>{
           this.$message({
             message: '删除成功！',
             type: 'success',
@@ -358,65 +315,6 @@ export default {
           });
         });
         this.getList();
-      }else if(this.operateType===1){
-        //违规
-        let ids=[];
-        let data = new URLSearchParams();
-        for(let i=0;i<this.multipleSelection.length;i++){
-          ids.push(this.multipleSelection[i].id);
-        }
-        data.append("ids", ids);
-        data.append("showStatus", "1");
-        this.$confirm('是否要修改为违规状态?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          updateStatus(data).then(response => {
-            this.getList();
-            this.$message({
-              message: '修改成功',
-              type: 'success',
-              duration: 1000
-            });
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'success',
-            message: '已取消操作!'
-          });
-          this.getList();
-        });
-
-      }else if(this.operateType===2){
-        //取消违规
-        let ids=[];
-        let data = new URLSearchParams();
-        for(let i=0;i<this.multipleSelection.length;i++){
-          ids.push(this.multipleSelection[i].id);
-        }
-        data.append("ids", ids);
-        data.append("showStatus", "0");
-        this.$confirm('是否要修改为非违规状态?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          updateStatus(data).then(response => {
-            this.getList();
-            this.$message({
-              message: '修改成功',
-              type: 'success',
-              duration: 1000
-            });
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'success',
-            message: '已取消操作!'
-          });
-          this.getList();
-        });
       }else {
         this.$message({
           message: '请选择批量操作类型',
@@ -426,16 +324,15 @@ export default {
       }
     },
     handleAdd(){
-      this.comment.productId = this.list[0].productId;
-      this.comment.productName = this.list[0].productName;
+      this.comment.commentId = this.$route.query.id;
       this.dialogFormVisible = true;   // 显示对话框
-      this.dialogTitle = "发布评论";
+      this.dialogTitle = "回复当前商品下的评论";
     },
     getList() {
       this.listLoading = true;
-      fetchList(this.listQuery, this.$route.query.id).then(response => {
+      getCommentReply(this.listQuery, this.$route.query.id).then(response => {
         this.listLoading = false;
-        this.list = response.data.list;
+        this.list = response.data.records;
         this.total = response.data.total;
       })
     },
