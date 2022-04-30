@@ -90,27 +90,34 @@
             <p>品牌：{{scope.row.brandName}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="价格/货号" width="120" align="center">
+        <el-table-column label="价格/货号" width="200" align="center">
           <template slot-scope="scope">
             <p>价格：￥{{scope.row.price}}</p>
             <p>货号：{{scope.row.productSn}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="销量" width="100" align="center">
+        <el-table-column label="销量" width="120" align="center">
           <template slot-scope="scope">{{scope.row.sale}}</template>
         </el-table-column>
-        <el-table-column label="评论数" width="100" align="center">
+        <el-table-column label="评论数" width="120" align="center">
           <template slot-scope="scope">{{scope.row.commentSum}}</template>
+        </el-table-column>
+        <el-table-column label="评分" width="120" align="center">
+          <template slot-scope="scope">{{scope.row.score | formatType}}</template>
         </el-table-column>
         <el-table-column label="操作" width="300" align="center">
           <template slot-scope="scope">
             <p>
               <el-button
                 size="mini"
+                type="success"
+                round
                 @click="handleSendComment(scope.$index, scope.row)">发布评论
               </el-button>
               <el-button
                 size="mini"
+                type="info"
+                plain
                 @click="handleSendCommentReply(scope.$index, scope.row)">回复评论
               </el-button>
             </p>
@@ -193,6 +200,14 @@ export default {
     // 商品分类下拉级联初始化
     this.getProductCateList();
     this.mounted();
+  },
+  filters:{
+    formatType(type){
+      if(type==null){
+        return '暂无评分';
+      }else
+        return type;
+    }
   },
   watch: {
     selectProductCateValue: function (newValue) {

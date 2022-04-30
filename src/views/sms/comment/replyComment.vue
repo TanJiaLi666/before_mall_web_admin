@@ -92,16 +92,19 @@
             </div>
           </template>
         </el-table-column>
-
+        <el-table-column label="回复数" width="100"  align="center">
+          <template slot-scope="scope">{{scope.row.replayCount | formatType3}}</template>
+        </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
             <el-button size="mini"
-                       type="text"
+                       type="primary"
                        @click="showCommentReply(scope.$index, scope.row)">查看回复
             </el-button>
             <el-button size="mini"
-                       type="text"
-                       @click="handleDelete(scope.$index, scope.row)">删除
+                       type="danger"
+                       icon="el-icon-delete"
+                       @click="handleDelete(scope.$index, scope.row)">
             </el-button>
           </template>
         </el-table-column>
@@ -234,6 +237,13 @@ export default {
         return '置顶';
       } else{
         return '非置顶';
+      }
+    },
+    formatType3(type){
+      if(type===null){
+        return 0;
+      }else{
+        return type;
       }
     }
   },
