@@ -89,26 +89,14 @@
         <el-table-column label="销量" width="120" align="center">
           <template slot-scope="scope">{{scope.row.sale}}</template>
         </el-table-column>
-        <el-table-column label="评论数" width="120" align="center">
-          <template slot-scope="scope">{{scope.row.commentSum}}</template>
-        </el-table-column>
-        <el-table-column label="评分" width="120" align="center">
-          <template slot-scope="scope">{{scope.row.score | formatType}}</template>
-        </el-table-column>
         <el-table-column label="操作" width="300" align="center">
           <template slot-scope="scope">
             <p>
               <el-button
                 size="mini"
-                type="success"
-                round
-                @click="handleSendComment(scope.$index, scope.row)">发布评论
-              </el-button>
-              <el-button
-                size="mini"
                 type="info"
-                plain
-                @click="handleSendCommentReply(scope.$index, scope.row)">回复评论
+                round
+                @click="handleAnalysis(scope.$index, scope.row)">开始分析
               </el-button>
             </p>
           </template>
@@ -127,26 +115,12 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog :visible.sync="dialogFormVisible" :title="dialogTitle">
-      <el-autocomplete
-        class="inline-input"
-        v-model="comment.content"
-        :fetch-suggestions="querySearch"
-        placeholder="请输入需要发布的内容"
-        @select="handleSelect"
-      ></el-autocomplete>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sendComment()">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
 import {fetchList} from '@/api/product'
 import {fetchList as fetchBrandList} from '@/api/brand'
 import {fetchListWithChildren} from '@/api/productCate'
-import {sendComment} from '@/api/comment'
 
 const defaultListQuery = {
   keyword: null,
@@ -196,7 +170,6 @@ export default {
     this.getBrandList();
     // 商品分类下拉级联初始化
     this.getProductCateList();
-    this.mounted();
   },
   filters:{
     formatType(type){
@@ -217,14 +190,6 @@ export default {
     }
   },
   methods: {
-    sendComment(){
-      this.dialogFormVisible = false
-      sendComment(this.comment).then(res => {
-        this.$message("发布成功！！！");
-        this.comment.content = '';
-        this.getList();
-      });
-    },
     handleSelect(item) {
       console.log(item);
     },
@@ -239,14 +204,8 @@ export default {
       // 调用 callback 返回建议列表的数据
       cb(results);
     },
-    handleSendComment(index,row){
-      this.comment.productId = row.id;
-      this.comment.productName = row.name;
-      this.dialogFormVisible = true;   // 显示对话框
-      this.dialogTitle = "发布评论";
-    },
-    handleSendCommentReply(index,row){
-      this.$router.push({path:'/sms/replyComment',query:{id:row.id}});
+    handleAnalysis(index,row){
+      this.$router.push({path:'/sms/analysisInfo',query:{id:row.id}});
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -308,24 +267,11 @@ export default {
     },
     handleShowLog(index,row){
       console.log("handleShowLog",row);
-    },
-    mounted() {
-      this.restaurants = this.loadAll();
-    },
-    loadAll() {
-      return [
-        { "value": "好的，感谢您的建议！！！！", "address": "好的，感谢您的建议！！！！" },
-        { "value": "这个我们也没办法，请包涵！！！", "address": "这个我们也没办法，请包涵！！！" },
-        { "value": "谢谢！！！", "address": "谢谢！！！" },
-        { "value": "已阅，立马处理！！！", "address": "已阅，立马处理！！！" },
-        { "value": "请联系管理员，谢谢！！", "address": "请联系管理员，谢谢！！" },
-        { "value": "哈哈哈哈，嗝！！", "address": "哈哈哈哈，嗝！！" },
-        { "value": "商品库存充足，24小时等您！！", "address": "商品库存充足，24小时等您！！" }
-      ];
     }
   }
 }
 </script>
 <style></style>
+
 
 

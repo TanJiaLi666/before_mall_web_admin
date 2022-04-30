@@ -144,12 +144,6 @@
         <el-table-column label="审核状态" width="100" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.verifyStatus | verifyStatusFilter}}</p>
-            <p>
-              <el-button
-                type="text"
-                @click="handleShowVerifyDetail(scope.$index, scope.row)">审核详情
-              </el-button>
-            </p>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="160" align="center">
@@ -597,6 +591,7 @@
       },
       handleShowVerifyDetail(index,row){
         console.log("handleShowVerifyDetail",row);
+        this.$router.push({path:'/ums/shopIndex',query:{id:row.id}});
       },
       handleShowLog(index,row){
         console.log("handleShowLog",row);

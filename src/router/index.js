@@ -191,6 +191,32 @@ export const asyncRouterMap = [
     meta: {title: '营销', icon: 'sms'},
     children: [
       {
+        path: 'forecast',
+        name: 'forecast',
+        component: () => import('@/views/sms/forecast/index'),
+        meta: {title: '销量预测', icon: 'sms-flash'}
+      },
+      {
+        path: 'forecastInfo',
+        name: 'forecastInfo',
+        component: () => import('@/views/sms/forecast/forecastInfo'),
+        meta: {title: '预测信息', icon: 'sms-flash'},
+        hidden:true
+      },
+      {
+        path: 'analysis',
+        name: 'analysis',
+        component: () => import('@/views/sms/analysis/index'),
+        meta: {title: '产品分析', icon: 'sms-flash'}
+      },
+      {
+        path: 'analysisInfo',
+        name: 'analysisInfo',
+        component: () => import('@/views/sms/analysis/analysisInfo'),
+        meta: {title: '分析信息', icon: 'sms-flash'},
+        hidden:true
+      },
+      {
         path: 'flash',
         name: 'flash',
         component: () => import('@/views/sms/flash/index'),
@@ -337,6 +363,12 @@ export const asyncRouterMap = [
     name: 'ums',
     meta: {title: '权限', icon: 'ums'},
     children: [
+      {
+        path: 'shopIndex',
+        name: 'shopIndex',
+        component: () => import('@/views/ums/shopCheck/index'),
+        meta: {title: '商品审核', icon: 'ums-admin'}
+      },
       {
         path: 'admin',
         name: 'admin',

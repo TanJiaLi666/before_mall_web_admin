@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-export function fetchList(params) { 
+export function fetchList(params) {
   return request({
     url:'/product/list',
     method:'get',
@@ -69,4 +69,10 @@ export function getProduct(id) {
     method:'get',
   })
 }
-
+export function updateVerifyStatus(params) {
+  return request({
+    url:'/product/update/verifyStatus',
+    method:'post',
+    params:params
+  })
+}
