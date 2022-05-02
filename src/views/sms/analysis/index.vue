@@ -205,7 +205,7 @@ export default {
       cb(results);
     },
     handleAnalysis(index,row){
-      this.$router.push({path:'/sms/analysisInfo',query:{id:row.id}});
+      this.$router.push({path:'/sms/analysisInfo',query:{id:row.id,stock:row.stock,lowStock:row.lowStock}});
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
