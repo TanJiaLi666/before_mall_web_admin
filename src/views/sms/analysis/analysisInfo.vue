@@ -6,15 +6,11 @@
       <span>产品分析详细信息：</span>
       <p>
         <span style="float: left;margin: 30px;padding-left: 200px">分析评估分数：<span style="color: red">{{this.score}}</span>(满分100)</span>
-        <span style="float: left;margin: 30px;padding-right: 200px">商品存货：{{this.stock}}件</span>
-      </p>
-      <p>
-        <span style="float: left;margin: 30px;padding-left: 200px">销售额：￥{{this.shopSumPrice}}</span>
-        <span style="float: left;margin: 30px;padding-right: 200px">销量：{{this.shopSumCount}}份</span>
-      </p>
-      <p>
-        <span style="float: left;margin: 30px;padding-left: 200px">评估建议：{{this.score | formatScore}}</span>
-        <span style="float: left;margin: 30px;padding-left: 200px">退货量：{{this.shopReturnSum}}单</span>
+        <span style="float: left;margin: 30px;padding-right: 200px">商品存货：<span style="color: red">{{this.stock}}</span>件</span>
+        <span style="float: left;margin: 30px;padding-left: 100px">销售额：￥<span style="color: red">{{this.shopSumPrice}}</span></span>
+        <span style="float: left;margin: 30px;padding-right: 200px">销量：<span style="color: red">{{this.shopSumCount}}</span>份</span>
+        <span style="float: left;margin: 30px;padding-left: 200px">评估建议：<span style="size: 20px;color: #3c763d">{{this.score | formatScore}}</span></span>
+        <span style="float: left;margin: 30px;padding-left: 100px">退货量：<span style="color: red">{{this.shopReturnSum}}</span>单</span>
       </p>
     </el-card>
     <el-card class="pie">
@@ -74,14 +70,9 @@ export default {
   },
   filters:{
     formatScore(type) {
-      if (type >= 90) {
-        if (this.stock>=this.lowStock){
-          return "状态良好！";
-        }
-        else{
-          return "建议进货！";
-        }
-      }else if(type>=60){
+      if (type >= 60) {
+        return "状态良好！建议进货！";
+      }else if(type>=30){
         return "保持状态！"
       }else {
         return "建议调整！"
@@ -107,6 +98,7 @@ export default {
       this.chartData2.rows[1].num = this.sumPrice-this.shopSumPrice;
       this.chartData3.rows[0].num = this.shopReturnSum;
       this.chartData3.rows[1].num = this.returnSum-this.shopReturnSum;
+      this.score = Math.ceil(((this.shopSumCount/this.sumCount) *3 + (this.shopSumPrice/this.sumPrice) *2 - this.shopReturnSum/this.returnSum)/2 * 100);
     }
   }
 }
