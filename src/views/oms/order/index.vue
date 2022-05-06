@@ -302,7 +302,9 @@
           return '已关闭';
         } else if (value === 5) {
           return '无效订单';
-        } else {
+        } else if(value === 6){
+          return '退货申请中';
+        }else {
           return '待付款';
         }
       },
